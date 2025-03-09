@@ -1,11 +1,30 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"TODOapi"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
-func (h *Hanler) SingUp(c *gin.Context) {
+func (h *Hanler) SignUp(c *gin.Context) {
+	var input TODOapi.User
 
+	if err := c.BindJSON(&input); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	id, err := h.services.CreateUser(input)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"id": id,
+	})
 }
 
-func (h *Hanler) SingIn(c *gin.Context) {
+func (h *Hanler) SignIn(c *gin.Context) {
 
 }

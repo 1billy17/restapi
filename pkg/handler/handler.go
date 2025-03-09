@@ -18,8 +18,8 @@ func (h *Hanler) InitRoutes() *gin.Engine {
 
 	auth := router.Group("/auth")
 	{
-		auth.POST("/sing-up", h.SingUp)
-		auth.POST("/sing-in", h.SingIn)
+		auth.POST("/sign-up", h.SignUp)
+		auth.POST("/sign-in", h.SignIn)
 	}
 
 	api := router.Group("/api")
