@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (h *Hanler) SignUp(c *gin.Context) {
+func (h *Handler) SignUp(c *gin.Context) {
 	var input TODOapi.User
 
 	if err := c.BindJSON(&input); err != nil {
@@ -30,7 +30,7 @@ type signInInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func (h *Hanler) SignIn(c *gin.Context) {
+func (h *Handler) SignIn(c *gin.Context) {
 	var input signInInput
 
 	if err := c.BindJSON(&input); err != nil {

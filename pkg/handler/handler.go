@@ -5,15 +5,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Hanler struct {
+type Handler struct {
 	services *service.Service
 }
 
-func NewHandler(services *service.Service) *Hanler {
-	return &Hanler{services: services}
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
 }
 
-func (h *Hanler) InitRoutes() *gin.Engine {
+func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
 	auth := router.Group("/auth")
@@ -22,7 +22,7 @@ func (h *Hanler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-in", h.SignIn)
 	}
 
-	api := router.Group("/api")
+	api := router.Group("/api", h.userIdentity)
 	{
 		lists := api.Group("/lists")
 		{
