@@ -23,3 +23,7 @@ func (s *TodoListService) GetAllLists(userId int) ([]TODOapi.TodoList, error) {
 func (s *TodoListService) GetListById(userId, listId int) (TODOapi.TodoList, error) {
 	return s.repo.GetListById(userId, listId)
 }
+
+func (s *TodoListService) DeleteListById(userId, listId int) error {
+	return s.repo.DeleteListById(userId, listId)
+}
