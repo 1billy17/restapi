@@ -4,6 +4,8 @@ import (
 	"TODOapi"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/sirupsen/logrus"
+	"strings"
 )
 
 type TodoListPostgres struct {
@@ -63,4 +65,35 @@ func (r *TodoListPostgres) DeleteListById(userId, listId int) error {
 	_, err := r.db.Exec(query, userId, listId)
 
 	return err
+}
+
+func (r *TodoListPostgres) UpdateList(userId, listId int, input TODOapi.UpdateListInput) error {
+	setValues := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if input.Title != nil {
+		setValues = append(setValues, fmt.Sprintf("title=$%d", argId))
+		args = append(args, *input.Title)
+		argId++
+	}
+
+	if input.Description != nil {
+		setValues = append(setValues, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *input.Description)
+		argId++
+	}
+
+	setQuery := strings.Join(setValues, ", ")
+
+	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.lists_id AND ul.lists_id=$%d AND ul.user_id=$%d",
+		todoListsTable, setQuery, usersListsTable, argId, argId+1)
+	args = append(args, listId, userId)
+
+	logrus.Debug("updateQuery: %s", query)
+	logrus.Debug("args: %s", args)
+
+	_, err := r.db.Exec(query, args...)
+	return err
+
 }
